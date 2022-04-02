@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-
 const User = require("../models/User");
 
 //======> USER SIGNUP
@@ -15,7 +14,7 @@ exports.userSignup = async (req, res, next) => {
     let imageUrl = "";
     const email = req.body.email;
     const password = req.body.password;
-    const name = req.body.name;
+    const username = req.body.username;
     const hashPw = await bcrypt.hash(password, 12);
     if (!req.file) {
       return res.status(422).res({ json: "User image not found!" });
@@ -25,9 +24,10 @@ exports.userSignup = async (req, res, next) => {
     const user = await new User({
       email: email,
       password: hashPw,
-      name: name,
+      username: username,
       image: imageUrl,
     });
+    await user.save();
 
     const token = jwt.sign(
       {
@@ -83,5 +83,17 @@ exports.userLogin = async (req, res, next) => {
     });
   } catch (err) {
     res.status(500).json({ message: "User couldn't login now. Try again." });
+  }
+};
+
+//======> FETCH ALL USERS
+exports.getAllUsers = async (req, res, next) => {
+  try {
+    let users = await User.find();
+    res
+      .status(200)
+      .json({ message: "Fetch all user successffully!", users: users });
+  } catch (err) {
+    res.status(500).json({ message: "couldn't find users. Try again." });
   }
 };

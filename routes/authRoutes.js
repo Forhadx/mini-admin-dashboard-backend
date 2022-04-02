@@ -3,6 +3,7 @@ const { body } = require("express-validator");
 const User = require("../models/User");
 const userController = require("../controllers/users");
 const fileUpload = require("../middleware/fileUrl");
+const isAuth = require("../middleware/isAuth");
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.post(
         });
       }),
     body("password", "password is required").trim().isLength({ min: 4 }),
-    body("name", "enter your name").trim().notEmpty(),
+    body("username", "enter your name").trim().notEmpty(),
   ],
   userController.userSignup
 );
@@ -31,5 +32,7 @@ router.post(
   [body("email", "enter a valid email").isEmail().normalizeEmail()],
   userController.userLogin
 );
+
+router.get("/api/users", isAuth, userController.getAllUsers);
 
 module.exports = router;
