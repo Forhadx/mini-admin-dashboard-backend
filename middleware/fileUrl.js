@@ -5,7 +5,6 @@ const MIME_TYPE_MAP = {
   "image/png": "png",
   "image/jpeg": "jpeg",
   "image/jpg": "jpg",
-  "application/pdf": "pdf",
 };
 
 const fileStorage = multer.diskStorage({
