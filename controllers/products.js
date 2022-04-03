@@ -18,6 +18,7 @@ exports.getAllProducts = async (req, res, next) => {
 };
 
 exports.addProduct = async (req, res, next) => {
+  console.log("req: ", req.body);
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -30,6 +31,7 @@ exports.addProduct = async (req, res, next) => {
     }
     let imagePath = "";
     imagePath = req.file.path.replace(/\\/g, "/");
+    console.log("image: ", imagePath);
     const product = new Product({
       pName: pName,
       pPrice: pPrice,
@@ -48,6 +50,7 @@ exports.addProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
   const pId = req.params.pId;
   const { pName, pPrice } = req.body;
+  console.log(pId);
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -59,15 +62,14 @@ exports.updateProduct = async (req, res, next) => {
     }
     let imageUrl = req.body.pImage;
     if (req.file) {
-      clearImage(product.image);
+      clearImage(product.pImage);
       imageUrl = req.file.path.replace(/\\/g, "/");
     }
-
     product.pName = pName;
     product.pImage = imageUrl;
     product.pPrice = pPrice;
-
     await product.save();
+
     res.status(201).json({
       message: " updated product successfully.",
       product: product,
@@ -84,7 +86,7 @@ exports.deleteProduct = async (req, res, next) => {
     if (!product) {
       return res.status(422).res({ json: "Product couldn't found!" });
     }
-    clearImage(product.image);
+    clearImage(product.pImage);
     await Product.findByIdAndDelete(pId);
     res.status(201).json({ message: "product delete successfully." });
   } catch (err) {

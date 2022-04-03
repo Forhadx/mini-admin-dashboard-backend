@@ -1,5 +1,5 @@
 const express = require("express");
-const { body, check } = require("express-validator");
+const { body } = require("express-validator");
 
 const productsController = require("../controllers/products");
 const fileUpload = require("../middleware/fileUrl");
