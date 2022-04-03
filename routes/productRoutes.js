@@ -3,13 +3,15 @@ const { body } = require("express-validator");
 
 const productsController = require("../controllers/products");
 const fileUpload = require("../middleware/fileUrl");
+const isAuth = require("../middleware/isAuth");
 
 const router = express.Router();
 
-router.get("/api/products", productsController.getAllProducts);
+router.get("/api/products", isAuth, productsController.getAllProducts);
 
 router.post(
   "/api/product",
+  isAuth,
   fileUpload.single("pImage"),
   [
     body("pName", "product name should be between 3 to 60 character.")
@@ -26,6 +28,7 @@ router.post(
 
 router.patch(
   "/api/product/:pId",
+  isAuth,
   fileUpload.single("pImage"),
   [
     body("pName", "product name should be between 3 to 60 character.")
@@ -40,6 +43,6 @@ router.patch(
   productsController.updateProduct
 );
 
-router.delete("/api/product/:pId", productsController.deleteProduct);
+router.delete("/api/product/:pId", isAuth, productsController.deleteProduct);
 
 module.exports = router;

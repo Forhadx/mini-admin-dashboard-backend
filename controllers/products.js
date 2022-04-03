@@ -18,7 +18,6 @@ exports.getAllProducts = async (req, res, next) => {
 };
 
 exports.addProduct = async (req, res, next) => {
-  console.log("req: ", req.body);
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -31,7 +30,6 @@ exports.addProduct = async (req, res, next) => {
     }
     let imagePath = "";
     imagePath = req.file.path.replace(/\\/g, "/");
-    console.log("image: ", imagePath);
     const product = new Product({
       pName: pName,
       pPrice: pPrice,
@@ -50,7 +48,6 @@ exports.addProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
   const pId = req.params.pId;
   const { pName, pPrice } = req.body;
-  console.log(pId);
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
